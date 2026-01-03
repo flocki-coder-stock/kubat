@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Добавление категорий в выпадающее меню -->
+{% block categories %}
+{% for category in categories %}
+    <a href="{% url 'products:product_list_by_category' category.slug %}" class="category-item">
+        {{ category.name }}
+    </a>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<article class="catalog-section">
+    <div class="container">
+        <div class="catalog-header">
+            <h2 class="catalog-title">Каталог товаров</h2>
+            <p class="catalog-subtitle">Качественные канцелярские товары для вашего офиса и учебы</p>
+        </div>
+
+        <!-- Сетка товаров с данными из Django -->
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="/placeholder.svg?height=300&width=300" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="product-content">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                     <div class="product-bottom">
+                    <div class="product-price-stock">
+                        <span class="product-price">{{ product.price }} сом</span>
+                        {% if product.stock > 0 %}
+                            <span class="product-stock in-stock">В наличии</span>
+                        {% else %}
+                            <span class="product-stock out-of-stock">Нет в наличии</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-footer">
+                        {% if product.stock > 0 %}
+                            <button class="btn-add-cart" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">
+                                В корзину
+                            </button>
+                        {% else %}
+                            <button class="btn-add-cart" disabled>
+                                Недоступно
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>Товары не найдены</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</article>
+{% endblock %}

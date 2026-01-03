@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cart-page">
+
+  <div class="cart-header">
+    <h1 class="cart-title">Оформление заказа</h1>
+  </div>
+
+  <form method="post" class="cart-content"><form method="post"
+      action="{% url 'orders:checkout' %}"
+      class="cart-content">
+    {% csrf_token %}
+
+    <!-- LEFT -->
+    <div class="cart-items">
+      {% for item in cart %}
+      <div class="cart-item">
+        <strong>{{ item.product.name }}</strong>
+        × {{ item.quantity }}
+        — {{ item.total_price }} сом
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- RIGHT -->
+    <aside class="cart-summary">
+  <div class="cart-summary-content">
+
+    <h3 class="cart-summary-title">Контактные данные</h3>
+
+    <div class="checkout-field">
+      <label for="full_name">ФИО</label>
+      <input
+        id="full_name"
+        name="full_name"
+        type="text"
+        placeholder="Иван Иванов"
+        required
+      >
+    </div>
+
+    <div class="checkout-field">
+      <label for="phone">Телефон</label>
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        placeholder="+996 XXX XXX XXX"
+        required
+      >
+    </div>
+
+    <div class="checkout-field">
+      <label for="address">Адрес доставки</label>
+      <textarea
+        id="address"
+        name="address"
+        rows="3"
+        placeholder="Город, улица, дом, квартира"
+        required
+      ></textarea>
+    </div>
+
+    <div class="cart-summary-divider"></div>
+
+    <div class="cart-summary-total">
+      <span class="cart-summary-total-label">Итого</span>
+      <span class="cart-summary-total-value">
+        {{ cart.get_total_price }} сом
+      </span>
+    </div>
+
+    <button type="submit" class="checkout-btn">
+      Подтвердить заказ
+    </button>
+
+    <p class="checkout-note">
+      Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+    </p>
+
+  </div>
+</aside>
+
+
+  </form>
+
+</div>
+{% endblock %}
